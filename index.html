@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Post-Install Helper</title>
+    <style>
+        /* Reset i blokada przewijania - wszystko musi wejść na 1 ekran */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e24;
+            color: #ffffff;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 2vh 2%;
+        }
+
+        /* Nagłówek strony oparty o vh */
+        header {
+            height: 8vh;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        header h1 {
+            font-size: 3.5vh;
+            color: #00adb5;
+        }
+
+        header p {
+            font-size: 1.8vh;
+            color: #eeeeee;
+            opacity: 0.8;
+        }
+
+        /* Główna siatka na programy - zajmuje resztę ekranu */
+        main {
+            height: 86vh;
+            margin-top: 2vh;
+            display: grid;
+            /* Automatyczne upakowanie jak największej liczby elementów */
+            grid-template-columns: repeat(auto-fill, minmax(12%, 1fr));
+            grid-auto-rows: 10vh; 
+            gap: 1.5vh 1%;
+            overflow-y: auto; /* W razie gigantycznej liczby aplikacji pojawi się wewnętrzny scroll, ale okno stoi w miejscu */
+        }
+
+        /* Kafelki z aplikacjami */
+        .app-card {
+            background-color: #303841;
+            border: 2px solid #3a4750;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            text-decoration: none;
+            color: white;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .app-card:hover {
+            background-color: #00adb5;
+            border-color: #bee5eb;
+            transform: scale(1.02);
+        }
+
+        /* Kontener na ikonę */
+        .app-icon {
+            width: 25%;
+            height: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8%;
+        }
+
+        .app-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Nazwa aplikacji */
+        .app-name {
+            font-size: 1.8vh;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 67%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Windows Post-Install Helper</h1>
+        <p>Wybierz programy do instalacji (konfiguracja z pliku JSON)</p>
+    </header>
+
+    <main id="apps-container">
+        <!-- Tutaj JavaScript automatycznie wstrzyknie kafelki -->
+    </main>
+
+    <script>
+        // Funkcja ładująca dane z zewnętrznego pliku JSON
+        async function loadApps() {
+            try {
+                // Pobieranie pliku config.json z tego samego folderu
+                const response = await fetch('config.json');
+                const apps = await response.json();
+                
+                const container = document.getElementById('apps-container');
+                container.innerHTML = ''; // Czyszczenie kontenera
+
+                // Generowanie kafelków dla każdego programu
+                apps.forEach(app => {
+                    const card = document.createElement('a');
+                    card.className = 'app-card';
+                    card.href = app.downloadUrl;
+                    card.target = '_blank'; // Otwieranie w nowej karcie
+                    card.title = `Kliknij, aby pobrać ${app.name}`;
+
+                    card.innerHTML = `
+                        <div class="app-icon">
+                            <img src="${app.iconUrl}" alt="${app.name} icon" onerror="this.src='https://flaticon.com'">
+                        </div>
+                        <div class="app-name">${app.name}</div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Błąd podczas ładowania pliku JSON:', error);
+                document.getElementById('apps-container').innerHTML = `<p style="color: red; font-size: 2vh; grid-column: 1/-1; text-align:center;">Nie udało się załadować pliku config.json. Upewnij się, że plik istnieje i uruchamiasz stronę przez serwer (np. Live Server).</p>`;
+            }
+        }
+
+        // Uruchomienie funkcji po załadowaniu strony
+        window.addEventListener('DOMContentLoaded', loadApps);
+    </script>
+</body>
+</html>
