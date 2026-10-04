@@ -1,41 +1,80 @@
 [
   {
     "section": "Przeglądarki",
-    "name": "Chrome",
-    "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
-    "variants": [
-      {"label": "Chrome PL", "url": "https://www.google.com/chrome/?hl=pl"},
-      {"label": "Chrome NL", "url": "https://www.google.com/chrome/?hl=nl"},
-      {"label": "Chrome EN", "url": "https://www.google.com/chrome/?hl=en"}
-    ]
-  },
-  {
-    "section": "Przeglądarki",
-    "name": "Opera",
-    "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732233.png",
-    "variants": [
-      {"label": "Opera PL", "url": "https://www.opera.com/pl"},
-      {"label": "Opera NL", "url": "https://www.opera.com/nl"},
-      {"label": "Opera EN", "url": "https://www.opera.com/"}
+    "apps": [
+      {
+        "name": "Google Chrome",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+        "variants": [
+          {
+            "label": "Chrome PL",
+            "url": "https://www.google.com/chrome/?hl=pl"
+          },
+          {
+            "label": "Chrome NL",
+            "url": "https://www.google.com/chrome/?hl=nl"
+          },
+          {
+            "label": "Chrome EN",
+            "url": "https://www.google.com/chrome/?hl=en"
+          }
+        ]
+      },
+      {
+        "name": "Opera",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732235.png",
+        "variants": [
+          {
+            "label": "Opera PL",
+            "url": "https://www.opera.com/pl"
+          },
+          {
+            "label": "Opera NL",
+            "url": "https://www.opera.com/nl"
+          },
+          {
+            "label": "Opera EN",
+            "url": "https://www.opera.com/en"
+          }
+        ]
+      }
     ]
   },
   {
     "section": "Sterowniki",
-    "name": "Intel RAID / RST",
-    "iconUrl": "https://cdn-icons-png.flaticon.com/512/906/906264.png",
-    "variants": [
-      {"label": "RST 8-9 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/19512/"},
-      {"label": "RST 11-12 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/720755/"}
+    "apps": [
+      {
+        "name": "Intel RST / RAID",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/5806/5806362.png",
+        "variants": [
+          {
+            "label": "RST 8-9 Gen",
+            "url": "./drivers/rst_8_9.exe"
+          },
+          {
+            "label": "RST 11-12 Gen",
+            "url": "./drivers/rst_11_12.exe"
+          }
+        ]
+      },
+      {
+        "name": "NVIDIA GeForce",
+        "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103819.png",
+        "variants": [
+          {
+            "label": "RTX 30 Series",
+            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
+          },
+          {
+            "label": "RTX 40 Series",
+            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
+          },
+          {
+            "label": "RTX 50 Series",
+            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
+          }
+        ]
+      }
     ]
-  },
-  {
-    "section": "Sterowniki",
-    "name": "NVIDIA GeForce",
-    "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103814.png",
-    "variants": [
-      {"label": "RTX 30 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
-      {"label": "RTX 40 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
-      {"label": "RTX 50 Series", "url": "https://www.nvidia.pl/Download/index.aspx"}
-                ]
   }
 ]
