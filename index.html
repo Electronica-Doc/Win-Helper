@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows Post-Install Helper</title>
+    <title>Windows Post-Install Ultimate Helper</title>
     <style>
-        /* Reset i blokada przewijania - wszystko musi wejść na 1 ekran */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,73 +12,87 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e24;
-            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #1a1a1e;
+            color: #e2e8f0;
             height: 100vh;
             width: 100%;
             overflow: hidden;
             display: flex;
-            flex-direction: column;
-            padding: 2vh 2%;
+            padding: 1.5vh 1%;
+            gap: 1.5%;
         }
 
-        /* Nagłówek strony oparty o vh */
-        header {
-            height: 8vh;
-            text-align: center;
+        /* Lewa strona - Główny panel */
+        .main-panel {
+            width: 68%;
+            height: 97vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        header {
+            height: 6vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #2d2d35;
+            padding-bottom: 1vh;
         }
 
         header h1 {
-            font-size: 3.5vh;
-            color: #00adb5;
+            font-size: 2.8vh;
+            color: #00f2fe;
+            text-shadow: 0 0 10px rgba(0,242,254,0.2);
         }
 
-        header p {
-            font-size: 1.8vh;
-            color: #eeeeee;
-            opacity: 0.8;
+        /* Kontener na sekcje z przewijaniem jeśli za dużo, ale z założenia kompaktowy */
+        .sections-container {
+            height: 91vh;
+            overflow-y: auto;
+            margin-top: 1vh;
+            padding-right: 0.5%;
         }
 
-        /* Główna siatka na programy - zajmuje resztę ekranu */
-        main {
-            height: 86vh;
-            margin-top: 2vh;
+        .section-box {
+            background: #22222b;
+            border: 1px solid #31313f;
+            border-radius: 6px;
+            margin-bottom: 1.5vh;
+            padding: 1vh 1.2%;
+        }
+
+        .section-title {
+            font-size: 2vh;
+            color: #4facfe;
+            margin-bottom: 1vh;
+            border-left: 3px solid #4facfe;
+            padding-left: 0.8%;
+            font-weight: 600;
+        }
+
+        .apps-grid {
             display: grid;
-            /* Automatyczne upakowanie jak największej liczby elementów */
-            grid-template-columns: repeat(auto-fill, minmax(12%, 1fr));
-            grid-auto-rows: 10vh; 
-            gap: 1.5vh 1%;
-            overflow-y: auto; /* W razie gigantycznej liczby aplikacji pojawi się wewnętrzny scroll, ale okno stoi w miejscu */
+            grid-template-columns: repeat(auto-fill, minmax(18vh, 1fr));
+            grid-auto-rows: 7.5vh;
+            gap: 1vh 0.8%;
         }
 
-        /* Kafelki z aplikacjami */
+        /* Kafelek aplikacji */
         .app-card {
-            background-color: #303841;
-            border: 2px solid #3a4750;
-            border-radius: 8px;
+            background-color: #2a2a35;
+            border: 1px solid #3a3a4a;
+            border-radius: 5px;
             display: flex;
             align-items: center;
-            padding: 0 5%;
-            text-decoration: none;
-            color: white;
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
+            padding: 0 6%;
+            position: relative;
+            height: 100%;
         }
 
-        .app-card:hover {
-            background-color: #00adb5;
-            border-color: #bee5eb;
-            transform: scale(1.02);
-        }
-
-        /* Kontener na ikonę */
         .app-icon {
-            width: 25%;
-            height: 60%;
+            width: 20%;
+            height: 55%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,64 +105,455 @@
             object-fit: contain;
         }
 
-        /* Nazwa aplikacji */
+        .app-info {
+            width: 72%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
         .app-name {
-            font-size: 1.8vh;
+            font-size: 1.5vh;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            width: 67%;
+        }
+
+        /* Styl listy rozwijanej (select) wewnątrz kafelka */
+        .app-select {
+            width: 100%;
+            background: #1a1a24;
+            color: #00f2fe;
+            border: 1px solid #444455;
+            font-size: 1.2vh;
+            padding: 0.2vh;
+            border-radius: 3px;
+            margin-top: 0.3vh;
+            cursor: pointer;
+            outline: none;
+        }
+        
+        .app-select:hover {
+            border-color: #00f2fe;
+        }
+
+        /* Przycisk akcji (Pobierz) */
+        .download-btn {
+            position: absolute;
+            right: 4%;
+            top: 20%;
+            background: #00adb5;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            padding: 0.3vh 0.6vh;
+            font-size: 1.1vh;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background: #00f2fe;
+        }
+
+        /* Prawa strona - Przyklejony konfigurator plików JSON */
+        .config-panel {
+            width: 30.5%;
+            height: 97vh;
+            background: #1f1f26;
+            border: 2px dashed #00f2fe;
+            border-radius: 8px;
+            padding: 1.8vh 1.5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .config-title {
+            font-size: 2.2vh;
+            color: #00f2fe;
+            text-align: center;
+            margin-bottom: 1.5vh;
+            font-weight: bold;
+        }
+
+        .form-container {
+            height: 55vh;
+            overflow-y: auto;
+            padding-right: 0.5%;
+        }
+
+        .form-group {
+            margin-bottom: 1.2vh;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1.35vh;
+            color: #a0aec0;
+            margin-bottom: 0.4vh;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            background: #2d2d3a;
+            border: 1px solid #444455;
+            color: white;
+            padding: 0.7vh 1%;
+            font-size: 1.4vh;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #00f2fe;
+        }
+
+        /* Przyciski operacyjne */
+        .btn-block {
+            display: flex;
+            gap: 1vh;
+            margin-top: 1vh;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1vh;
+            font-size: 1.5vh;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.9; }
+        .btn-add { background: #28a745; color: white; }
+        .btn-save { background: #007bff; color: white; }
+
+        /* Zarządzanie istniejącymi elementami (usuwanie) */
+        .manage-container {
+            height: 25vh;
+            border: 1px solid #3a3a4a;
+            border-radius: 4px;
+            background: #15151c;
+            overflow-y: auto;
+            margin-top: 1vh;
+            padding: 0.5vh;
+        }
+
+        .manage-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5vh 2%;
+            font-size: 1.3vh;
+            border-bottom: 1px solid #252530;
+        }
+
+        .manage-item button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.2vh 0.5vh;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 1.1vh;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Windows Post-Install Helper</h1>
-        <p>Wybierz programy do instalacji (konfiguracja z pliku JSON)</p>
-    </header>
+    <!-- Panel główny (Aplikacje) -->
+    <div class="main-panel">
+        <header>
+            <h1>Windows Post-Install Ultimate Helper</h1>
+        </header>
+        
+        <div class="sections-container" id="sections-wrapper">
+            <!-- Dane renderowane dynamicznie przez JS -->
+        </div>
+    </div>
 
-    <main id="apps-container">
-        <!-- Tutaj JavaScript automatycznie wstrzyknie kafelki -->
-    </main>
+    <!-- Prawy Panel (Zarządzanie Plikiem JSON) -->
+    <div class="config-panel">
+        <div>
+            <div class="config-title">🛠️ Edytor pliku JSON</div>
+            
+            <div class="form-container">
+                <div class="form-group">
+                    <label>Sekcja (np. Przeglądarki, Sterowniki, Skrypty, Test)</label>
+                    <input type="text" id="inp-section" list="sections-list" placeholder="Wybierz lub wpisz nową">
+                    <datalist id="sections-list"></datalist>
+                </div>
+                <div class="form-group">
+                    <label>Nazwa aplikacji / zestawu (np. Chrome, Nvidia)</label>
+                    <input type="text" id="inp-name" placeholder="np. Google Chrome">
+                </div>
+                <div class="form-group">
+                    <label>Ścieżka do Ikony (URL internetowy lub relatywna lokalna)</label>
+                    <input type="text" id="inp-icon" placeholder="np. ./icons/chrome.png lub URL">
+                </div>
+                
+                <!-- Warianty / Listy rozwijane -->
+                <div style="border: 1px dashed #444455; padding: 1vh; border-radius: 4px; margin-top: 1vh;">
+                    <span style="font-size: 1.3vh; color: #00f2fe; font-weight: bold;">Warianty pobierania (np. PL, EN, 30 series)</span>
+                    <div class="form-group" style="margin-top: 0.5vh;">
+                        <label>Etykieta wariantu 1 (np. PL lub 30 series)</label>
+                        <input type="text" id="inp-v1-name" placeholder="Zostaw puste jeśli brak wariantów">
+                    </div>
+                    <div class="form-group">
+                        <label>Link / Ścieżka pliku dla wariantu 1</label>
+                        <input type="text" id="inp-v1-url" placeholder="URL lub lokalny plik np. ./files/setup.exe">
+                    </div>
+                    <div class="form-group">
+                        <label>Etykieta wariantu 2 (np. EN lub 40 series)</label>
+                        <input type="text" id="inp-v2-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Link / Ścieżka pliku dla wariantu 2</label>
+                        <input type="text" id="inp-v2-url">
+                    </div>
+                    <div class="form-group">
+                        <label>Etykieta wariantu 3 (np. NL lub 50 series)</label>
+                        <input type="text" id="inp-v3-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Link / Ścieżka pliku dla wariantu 3</label>
+                        <input type="text" id="inp-v3-url">
+                    </div>
+                </div>
+                
+                <button class="btn btn-add" style="width: 100%; margin-top: 1.5vh;" onclick="addAppItem()">Dodaj do zestawu / Aktualizuj</button>
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 1.4vh; color: #a0aec0; margin-bottom: 0.5vh; font-weight: bold;">Lista aplikacji (kliknij Usuń):</div>
+            <div class="manage-container" id="manage-list"></div>
+            
+            <div class="btn-block">
+                <button class="btn btn-save" onclick="exportJSON()">Pobierz nowy plik config.json</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Funkcja ładująca dane z zewnętrznego pliku JSON
-        async function loadApps() {
+        // Główna baza danych aplikacji ładowana z JSON
+        let appConfig = [];
+
+        // Funkcja pobierająca plik JSON przy starcie
+        async function fetchConfig() {
             try {
-                // Pobieranie pliku config.json z tego samego folderu
                 const response = await fetch('config.json');
-                const apps = await response.json();
-                
-                const container = document.getElementById('apps-container');
-                container.innerHTML = ''; // Czyszczenie kontenera
-
-                // Generowanie kafelków dla każdego programu
-                apps.forEach(app => {
-                    const card = document.createElement('a');
-                    card.className = 'app-card';
-                    card.href = app.downloadUrl;
-                    card.target = '_blank'; // Otwieranie w nowej karcie
-                    card.title = `Kliknij, aby pobrać ${app.name}`;
-
-                    card.innerHTML = `
-                        <div class="app-icon">
-                            <img src="${app.iconUrl}" alt="${app.name} icon" onerror="this.src='https://flaticon.com'">
-                        </div>
-                        <div class="app-name">${app.name}</div>
-                    `;
-
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Błąd podczas ładowania pliku JSON:', error);
-                document.getElementById('apps-container').innerHTML = `<p style="color: red; font-size: 2vh; grid-column: 1/-1; text-align:center;">Nie udało się załadować pliku config.json. Upewnij się, że plik istnieje i uruchamiasz stronę przez serwer (np. Live Server).</p>`;
+                appConfig = await response.json();
+                renderUI();
+            } catch (e) {
+                console.log("Brak pliku config.json lub błąd CORS. Inicjalizacja bazy domyślnej.");
+                // Domyślne struktury testowe zgłaszane przez użytkownika
+                appConfig = [
+                    {
+                        "section": "Przeglądarki",
+                        "name": "Chrome",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+                        "variants": [
+                            {"label": "Chrome PL", "url": "https://www.google.com/chrome/?hl=pl"},
+                            {"label": "Chrome NL", "url": "https://www.google.com/chrome/?hl=nl"},
+                            {"label": "Chrome EN", "url": "https://www.google.com/chrome/?hl=en"}
+                        ]
+                    },
+                    {
+                        "section": "Przeglądarki",
+                        "name": "Opera",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732233.png",
+                        "variants": [
+                            {"label": "Opera PL", "url": "https://www.opera.com/pl"},
+                            {"label": "Opera NL", "url": "https://www.opera.com/nl"},
+                            {"label": "Opera EN", "url": "https://www.opera.com/"}
+                        ]
+                    },
+                    {
+                        "section": "Sterowniki",
+                        "name": "Intel RAID / RST",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/906/906264.png",
+                        "variants": [
+                            {"label": "RST 8-9 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/19512/"},
+                            {"label": "RST 11-12 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/720755/"}
+                        ]
+                    },
+                    {
+                        "section": "Sterowniki",
+                        "name": "NVIDIA GeForce",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103814.png",
+                        "variants": [
+                            {"label": "RTX 30 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
+                            {"label": "RTX 40 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
+                            {"label": "RTX 50 Series", "url": "https://www.nvidia.pl/Download/index.aspx"}
+                        ]
+                    },
+                    {
+                        "section": "Skrypty",
+                        "name": "Debloat Windows",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/6124/6124451.png",
+                        "variants": [
+                            {"label": "Uruchom Skrypt Win11", "url": "https://github.com/ChrisTitusTech/winutil"}
+                        ]
+                    },
+                    {
+                        "section": "Test",
+                        "name": "HWiNFO",
+                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/2865/2865790.png",
+                        "variants": [
+                            {"label": "HWiNFO Portable", "url": "https://www.hwinfo.com/download/"}
+                        ]
+                    }
+                ];
+                renderUI();
             }
         }
 
-        // Uruchomienie funkcji po załadowaniu strony
-        window.addEventListener('DOMContentLoaded', loadApps);
+        // Funkcja renderująca elementy na ekranie
+        function renderUI() {
+            const wrapper = document.getElementById('sections-wrapper');
+            const datalist = document.getElementById('sections-list');
+            const manageList = document.getElementById('manage-list');
+            
+            wrapper.innerHTML = '';
+            manageList.innerHTML = '';
+            
+            // Grupowanie danych według sekcji
+            const sections = {};
+            appConfig.forEach(app => {
+                if (!sections[app.section]) sections[app.section] = [];
+                sections[app.section].push(app);
+            });
+
+            // Aktualizacja podpowiedzi sekcji w edytorze
+            datalist.innerHTML = Object.keys(sections).map(s => `<option value="${s}">`).join('');
+
+            // Renderowanie bloków sekcji
+            for (const sectionName in sections) {
+                const secBox = document.createElement('div');
+                secBox.className = 'section-box';
+                
+                secBox.innerHTML = `<div class="section-title">${sectionName}</div>`;
+                
+                const grid = document.createElement('div');
+                grid.className = 'apps-grid';
+                
+                sections[sectionName].forEach((app, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    
+                    // Renderowanie opcji w rozwijanej liście dla danego kafelka
+                    let selectHTML = '';
+                    if (app.variants && app.variants.length > 0) {
+                        selectHTML = `<select class="app-select" id="sel-${app.name.replace(/\s+/g, '')}">`;
+                        app.variants.forEach(v => {
+                            selectHTML += `<option value="${v.url}">${v.label}</option>`;
+                        });
+                        selectHTML += `</select>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="app-icon">
+                            <img src="${app.iconUrl}" alt="icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135682.png'">
+                        </div>
+                        <div class="app-info">
+                            <div class="app-name" title="${app.name}">${app.name}</div>
+                            ${selectHTML}
+                        </div>
+                        <button class="download-btn" onclick="triggerDownload('${app.name.replace(/\s+/g, '')}')">💾</button>
+                    `;
+                    grid.appendChild(card);
+
+                    // Jednocześnie dodajemy do listy usuwania po prawej stronie
+                    const mItem = document.createElement('div');
+                    mItem.className = 'manage-item';
+                    mItem.innerHTML = `
+                        <span>[${app.section}] <b>${app.name}</b></span>
+                        <button onclick="deleteAppItem('${app.name}')">Usuń</button>
+                    `;
+                    manageList.appendChild(mItem);
+                });
+                
+                secBox.appendChild(grid);
+                wrapper.appendChild(secBox);
+            }
+        }
+
+        // Obsługa pobierania po kliknięciu ikony zapisu na kafelku
+        function triggerDownload(elementId) {
+            const selectEl = document.getElementById(`sel-${elementId}`);
+            if (selectEl) {
+                window.open(selectEl.value, '_blank');
+            }
+        }
+
+        // Funkcja dodawania nowego kafelka z poziomu formularza modyfikatora
+        function addAppItem() {
+            const section = document.getElementById('inp-section').value.trim();
+            const name = document.getElementById('inp-name').value.trim();
+            const iconUrl = document.getElementById('inp-icon').value.trim();
+
+            if (!section || !name) {
+                alert('Sekcja oraz nazwa aplikacji są wymagane!');
+                return;
+            }
+
+            const variants = [];
+            for (let i = 1; i <= 3; i++) {
+                const vName = document.getElementById(`inp-v${i}-name`).value.trim();
+                const vUrl = document.getElementById(`inp-v${i}-url`).value.trim();
+                if (vName && vUrl) {
+                    variants.push({ "label": vName, "url": vUrl });
+                }
+            }
+
+            // Jeśli użytkownik nie dodał żadnego wariantu, utwórz domyślny z samą nazwą aplikacji
+            if (variants.length === 0) {
+                variants.push({ "label": "Pobierz", "url": "#" });
+            }
+
+            // Usunięcie jeśli już istnieje duplikat o tej samej nazwie w celu nadpisania
+            appConfig = appConfig.filter(item => item.name.toLowerCase() !== name.toLowerCase());
+
+            appConfig.push({
+                section,
+                name,
+                iconUrl: iconUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135682.png',
+                variants
+            });
+
+            // Reset formularza oprócz sekcji (wygoda dodawania seryjnego)
+            document.getElementById('inp-name').value = '';
+            document.getElementById('inp-icon').value = '';
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`inp-v${i}-name`).value = '';
+                document.getElementById(`inp-v${i}-url`).value = '';
+            }
+
+            renderUI();
+        }
+
+        // Usuwanie kafelka z konfiguracji
+        function deleteAppItem(name) {
+            appConfig = appConfig.filter(item => item.name !== name);
+            renderUI();
+        }
+
+        // Eksportowanie bieżącej konfiguracji do nowego pliku config.json
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appConfig, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "config.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchConfig);
     </script>
 </body>
 </html>
