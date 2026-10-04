@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Google Chrome",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://google.com"
+  },
+  {
+    "name": "Visual Studio Code",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://visualstudio.com"
+  },
+  {
+    "name": "7-Zip",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://7-zip.org"
+  },
+  {
+    "name": "Discord",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://discord.com"
+  },
+  {
+    "name": "VLC Player",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://videolan.org"
+  },
+  {
+    "name": "Steam",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://steampowered.com"
+  },
+  {
+    "name": "Spotify",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://spotify.com"
+  },
+  {
+    "name": "Notepad++",
+    "iconUrl": "https://flaticon.com",
+    "downloadUrl": "https://notepad-plus-plus.org"
+  }
+]
