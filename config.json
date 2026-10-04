@@ -1,42 +1,41 @@
 [
   {
-    "name": "Google Chrome",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://google.com"
+    "section": "Przeglądarki",
+    "name": "Chrome",
+    "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+    "variants": [
+      {"label": "Chrome PL", "url": "https://www.google.com/chrome/?hl=pl"},
+      {"label": "Chrome NL", "url": "https://www.google.com/chrome/?hl=nl"},
+      {"label": "Chrome EN", "url": "https://www.google.com/chrome/?hl=en"}
+    ]
   },
   {
-    "name": "Visual Studio Code",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://visualstudio.com"
+    "section": "Przeglądarki",
+    "name": "Opera",
+    "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732233.png",
+    "variants": [
+      {"label": "Opera PL", "url": "https://www.opera.com/pl"},
+      {"label": "Opera NL", "url": "https://www.opera.com/nl"},
+      {"label": "Opera EN", "url": "https://www.opera.com/"}
+    ]
   },
   {
-    "name": "7-Zip",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://7-zip.org"
+    "section": "Sterowniki",
+    "name": "Intel RAID / RST",
+    "iconUrl": "https://cdn-icons-png.flaticon.com/512/906/906264.png",
+    "variants": [
+      {"label": "RST 8-9 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/19512/"},
+      {"label": "RST 11-12 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/720755/"}
+    ]
   },
   {
-    "name": "Discord",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://discord.com"
-  },
-  {
-    "name": "VLC Player",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://videolan.org"
-  },
-  {
-    "name": "Steam",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://steampowered.com"
-  },
-  {
-    "name": "Spotify",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://spotify.com"
-  },
-  {
-    "name": "Notepad++",
-    "iconUrl": "https://flaticon.com",
-    "downloadUrl": "https://notepad-plus-plus.org"
+    "section": "Sterowniki",
+    "name": "NVIDIA GeForce",
+    "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103814.png",
+    "variants": [
+      {"label": "RTX 30 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
+      {"label": "RTX 40 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
+      {"label": "RTX 50 Series", "url": "https://www.nvidia.pl/Download/index.aspx"}
+                ]
   }
 ]
