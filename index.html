@@ -3,548 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows Post-Install Ultimate Helper</title>
+    <title>Universal Post-Install Helper</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
         }
         
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: #1a1a1e;
-            color: #e2e8f0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121214;
+            color: #e1e1e6;
             height: 100vh;
-            width: 100%;
+            width: 100vw;
             overflow: hidden;
             display: flex;
-            padding: 1.5vh 1%;
-            gap: 1.5%;
-        }
-
-        /* Lewa strona - Główny panel */
-        .main-panel {
-            width: 68%;
-            height: 97vh;
-            display: flex;
             flex-direction: column;
+            padding: 1.5vh 1.5vw;
         }
 
+        /* Top Bar z eksportem */
         header {
             height: 6vh;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #2d2d35;
-            padding-bottom: 1vh;
+            border-bottom: 1px solid #29292e;
+            padding-bottom: 0.5vh;
         }
 
-        header h1 {
-            font-size: 2.8vh;
-            color: #00f2fe;
-            text-shadow: 0 0 10px rgba(0,242,254,0.2);
+        header h1 { font-size: 2.8vh; color: #04d361; }
+        
+        .btn-export {
+            background: #202024;
+            border: 1px solid #04d361;
+            color: #04d361;
+            padding: 0.6vh 1vw;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.6vh;
+            transition: 0.2s;
         }
+        .btn-export:hover { background: #04d361; color: #121214; }
 
-        /* Kontener na sekcje z przewijaniem jeśli za dużo, ale z założenia kompaktowy */
-        .sections-container {
-            height: 91vh;
+        /* Kontener na sekcje z wewnętrznym scrollem */
+        #workspace {
+            height: 92vh;
             overflow-y: auto;
-            margin-top: 1vh;
-            padding-right: 0.5%;
+            margin-top: 1.5vh;
+            padding-right: 0.5vw;
         }
 
-        .section-box {
-            background: #22222b;
-            border: 1px solid #31313f;
+        /* Sekcja kategorii */
+        .section-container {
+            background: #1c1c1f;
             border-radius: 6px;
+            padding: 1.5vh 1vw;
+            margin-bottom: 2vh;
+            border: 1px solid #29292e;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5vh;
-            padding: 1vh 1.2%;
+            border-bottom: 1px solid #323238;
+            padding-bottom: 0.5vh;
         }
 
-        .section-title {
-            font-size: 2vh;
-            color: #4facfe;
-            margin-bottom: 1vh;
-            border-left: 3px solid #4facfe;
-            padding-left: 0.8%;
-            font-weight: 600;
+        .section-title { font-size: 2.2vh; color: #a8a8b3; font-weight: 600; }
+        
+        .btn-delete-section {
+            background: transparent;
+            border: none;
+            color: #f75a68;
+            cursor: pointer;
+            font-size: 1.5vh;
         }
 
-        .apps-grid {
+        /* Siatka kafelków */
+        .grid-apps {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(18vh, 1fr));
-            grid-auto-rows: 7.5vh;
-            gap: 1vh 0.8%;
+            grid-template-columns: repeat(auto-fill, minmax(14%, 1fr));
+            grid-auto-rows: 9vh;
+            gap: 1.5vh 1vw;
         }
 
-        /* Kafelek aplikacji */
+        /* Główny Kafelek */
         .app-card {
-            background-color: #2a2a35;
-            border: 1px solid #3a3a4a;
-            border-radius: 5px;
+            background: #202024;
+            border: 1px solid #323238;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             padding: 0 6%;
             position: relative;
-            height: 100%;
+            transition: border-color 0.2s;
         }
+        .app-card:hover { border-color: #04d361; }
 
         .app-icon {
-            width: 20%;
+            width: 22%;
             height: 55%;
+            margin-right: 8%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 8%;
         }
-
-        .app-icon img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+        .app-icon img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
         .app-info {
-            width: 72%;
+            width: 70%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            gap: 0.4vh;
         }
 
         .app-name {
-            font-size: 1.5vh;
-            font-weight: 600;
+            font-size: 1.7vh;
+            font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* Styl listy rozwijanej (select) wewnątrz kafelka */
+        /* Selektor wariantów wewnątrz kafelka */
+        .app-select-container {
+            display: flex;
+            width: 100%;
+            gap: 4%;
+        }
+
         .app-select {
-            width: 100%;
-            background: #1a1a24;
-            color: #00f2fe;
-            border: 1px solid #444455;
-            font-size: 1.2vh;
-            padding: 0.2vh;
+            width: 75%;
+            background: #121214;
+            color: #e1e1e6;
+            border: 1px solid #323238;
             border-radius: 3px;
-            margin-top: 0.3vh;
-            cursor: pointer;
-            outline: none;
-        }
-        
-        .app-select:hover {
-            border-color: #00f2fe;
-        }
-
-        /* Przycisk akcji (Pobierz) */
-        .download-btn {
-            position: absolute;
-            right: 4%;
-            top: 20%;
-            background: #00adb5;
-            border: none;
-            color: white;
-            border-radius: 3px;
-            padding: 0.3vh 0.6vh;
-            font-size: 1.1vh;
-            cursor: pointer;
-        }
-        .download-btn:hover {
-            background: #00f2fe;
-        }
-
-        /* Prawa strona - Przyklejony konfigurator plików JSON */
-        .config-panel {
-            width: 30.5%;
-            height: 97vh;
-            background: #1f1f26;
-            border: 2px dashed #00f2fe;
-            border-radius: 8px;
-            padding: 1.8vh 1.5%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .config-title {
-            font-size: 2.2vh;
-            color: #00f2fe;
-            text-align: center;
-            margin-bottom: 1.5vh;
-            font-weight: bold;
-        }
-
-        .form-container {
-            height: 55vh;
-            overflow-y: auto;
-            padding-right: 0.5%;
-        }
-
-        .form-group {
-            margin-bottom: 1.2vh;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 1.35vh;
-            color: #a0aec0;
-            margin-bottom: 0.4vh;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            background: #2d2d3a;
-            border: 1px solid #444455;
-            color: white;
-            padding: 0.7vh 1%;
-            font-size: 1.4vh;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #00f2fe;
-        }
-
-        /* Przyciski operacyjne */
-        .btn-block {
-            display: flex;
-            gap: 1vh;
-            margin-top: 1vh;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 1vh;
-            font-size: 1.5vh;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover { opacity: 0.9; }
-        .btn-add { background: #28a745; color: white; }
-        .btn-save { background: #007bff; color: white; }
-
-        /* Zarządzanie istniejącymi elementami (usuwanie) */
-        .manage-container {
-            height: 25vh;
-            border: 1px solid #3a3a4a;
-            border-radius: 4px;
-            background: #15151c;
-            overflow-y: auto;
-            margin-top: 1vh;
-            padding: 0.5vh;
-        }
-
-        .manage-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5vh 2%;
             font-size: 1.3vh;
-            border-bottom: 1px solid #252530;
+            padding: 0.2vh;
+            outline: none;
         }
 
-        .manage-item button {
-            background: #dc3545;
-            color: white;
+        .btn-download {
+            width: 21%;
+            background: #04d361;
             border: none;
-            padding: 0.2vh 0.5vh;
             border-radius: 3px;
+            color: #121214;
+            font-weight: bold;
+            font-size: 1.4vh;
             cursor: pointer;
-            font-size: 1.1vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .btn-download:hover { background: #00b34d; }
+
+        /* Przyciski Akcji (Dodaj program / Dodaj sekcję) */
+        .card-add {
+            border: 1px dashed #323238;
+            background: transparent;
+            justify-content: center;
+            align-items: center;
+            color: #8d8d99;
+            font-size: 1.6vh;
+            cursor: pointer;
+        }
+        .card-add:hover { border-color: #04d361; color: #04d361; }
+
+        .btn-add-section {
+            width: 100%;
+            background: #202024;
+            border: 1px dashed #04d361;
+            color: #04d361;
+            padding: 1.5vh;
+            border-radius: 6px;
+            font-size: 1.8vh;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 3vh;
+        }
+        .btn-add-section:hover { background: #1c1c1f; }
+
+        /* Własne Menu Kontekstowe (Prawy Przycisk) */
+        #context-menu {
+            position: absolute;
+            background: #29292e;
+            border: 1px solid #4d4d57;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        }
+
+        #context-menu div {
+            padding: 1vh 1.5vw;
+            font-size: 1.5vh;
+            cursor: pointer;
+            color: #e1e1e6;
+        }
+        #context-menu div:hover { background: #04d361; color: #121214; }
     </style>
 </head>
 <body>
 
-    <!-- Panel główny (Aplikacje) -->
-    <div class="main-panel">
-        <header>
-            <h1>Windows Post-Install Ultimate Helper</h1>
-        </header>
-        
-        <div class="sections-container" id="sections-wrapper">
-            <!-- Dane renderowane dynamicznie przez JS -->
-        </div>
+    <header>
+        <h1>Windows Post-Install Helper</h1>
+        <button class="btn-export" onclick="exportConfig()">⬇️ Pobierz plik config.json</button>
+    </header>
+
+    <div id="workspace">
+        <!-- Generowane dynamicznie -->
     </div>
 
-    <!-- Prawy Panel (Zarządzanie Plikiem JSON) -->
-    <div class="config-panel">
-        <div>
-            <div class="config-title">🛠️ Edytor pliku JSON</div>
-            
-            <div class="form-container">
-                <div class="form-group">
-                    <label>Sekcja (np. Przeglądarki, Sterowniki, Skrypty, Test)</label>
-                    <input type="text" id="inp-section" list="sections-list" placeholder="Wybierz lub wpisz nową">
-                    <datalist id="sections-list"></datalist>
-                </div>
-                <div class="form-group">
-                    <label>Nazwa aplikacji / zestawu (np. Chrome, Nvidia)</label>
-                    <input type="text" id="inp-name" placeholder="np. Google Chrome">
-                </div>
-                <div class="form-group">
-                    <label>Ścieżka do Ikony (URL internetowy lub relatywna lokalna)</label>
-                    <input type="text" id="inp-icon" placeholder="np. ./icons/chrome.png lub URL">
-                </div>
-                
-                <!-- Warianty / Listy rozwijane -->
-                <div style="border: 1px dashed #444455; padding: 1vh; border-radius: 4px; margin-top: 1vh;">
-                    <span style="font-size: 1.3vh; color: #00f2fe; font-weight: bold;">Warianty pobierania (np. PL, EN, 30 series)</span>
-                    <div class="form-group" style="margin-top: 0.5vh;">
-                        <label>Etykieta wariantu 1 (np. PL lub 30 series)</label>
-                        <input type="text" id="inp-v1-name" placeholder="Zostaw puste jeśli brak wariantów">
-                    </div>
-                    <div class="form-group">
-                        <label>Link / Ścieżka pliku dla wariantu 1</label>
-                        <input type="text" id="inp-v1-url" placeholder="URL lub lokalny plik np. ./files/setup.exe">
-                    </div>
-                    <div class="form-group">
-                        <label>Etykieta wariantu 2 (np. EN lub 40 series)</label>
-                        <input type="text" id="inp-v2-name">
-                    </div>
-                    <div class="form-group">
-                        <label>Link / Ścieżka pliku dla wariantu 2</label>
-                        <input type="text" id="inp-v2-url">
-                    </div>
-                    <div class="form-group">
-                        <label>Etykieta wariantu 3 (np. NL lub 50 series)</label>
-                        <input type="text" id="inp-v3-name">
-                    </div>
-                    <div class="form-group">
-                        <label>Link / Ścieżka pliku dla wariantu 3</label>
-                        <input type="text" id="inp-v3-url">
-                    </div>
-                </div>
-                
-                <button class="btn btn-add" style="width: 100%; margin-top: 1.5vh;" onclick="addAppItem()">Dodaj do zestawu / Aktualizuj</button>
-            </div>
-        </div>
-
-        <div>
-            <div style="font-size: 1.4vh; color: #a0aec0; margin-bottom: 0.5vh; font-weight: bold;">Lista aplikacji (kliknij Usuń):</div>
-            <div class="manage-container" id="manage-list"></div>
-            
-            <div class="btn-block">
-                <button class="btn btn-save" onclick="exportJSON()">Pobierz nowy plik config.json</button>
-            </div>
-        </div>
+    <!-- Menu pod prawym przyciskiem myszy -->
+    <div id="context-menu">
+        <div onclick="contextEditApp()">✏️ Edytuj program</div>
+        <div onclick="contextDeleteApp()" style="color: #f75a68;">❌ Usuń program</div>
     </div>
 
     <script>
-        // Główna baza danych aplikacji ładowana z JSON
-        let appConfig = [];
+        let configData = [];
+        let currentTargetApp = null;
 
-        // Funkcja pobierająca plik JSON przy starcie
-        async function fetchConfig() {
+        const workspace = document.getElementById('workspace');
+        const contextMenu = document.getElementById('context-menu');
+
+        async function init() {
             try {
                 const response = await fetch('config.json');
-                appConfig = await response.json();
-                renderUI();
+                configData = await response.json();
             } catch (e) {
-                console.log("Brak pliku config.json lub błąd CORS. Inicjalizacja bazy domyślnej.");
-                // Domyślne struktury testowe zgłaszane przez użytkownika
-                appConfig = [
+                console.log("Brak pliku config.json lub uruchomiono bez serwera. Ładowanie demo.");
+                configData = [
                     {
                         "section": "Przeglądarki",
-                        "name": "Chrome",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
-                        "variants": [
-                            {"label": "Chrome PL", "url": "https://www.google.com/chrome/?hl=pl"},
-                            {"label": "Chrome NL", "url": "https://www.google.com/chrome/?hl=nl"},
-                            {"label": "Chrome EN", "url": "https://www.google.com/chrome/?hl=en"}
-                        ]
-                    },
-                    {
-                        "section": "Przeglądarki",
-                        "name": "Opera",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732233.png",
-                        "variants": [
-                            {"label": "Opera PL", "url": "https://www.opera.com/pl"},
-                            {"label": "Opera NL", "url": "https://www.opera.com/nl"},
-                            {"label": "Opera EN", "url": "https://www.opera.com/"}
-                        ]
-                    },
-                    {
-                        "section": "Sterowniki",
-                        "name": "Intel RAID / RST",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/906/906264.png",
-                        "variants": [
-                            {"label": "RST 8-9 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/19512/"},
-                            {"label": "RST 11-12 Gen", "url": "https://www.intel.pl/content/www/pl/pl/download/720755/"}
-                        ]
-                    },
-                    {
-                        "section": "Sterowniki",
-                        "name": "NVIDIA GeForce",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103814.png",
-                        "variants": [
-                            {"label": "RTX 30 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
-                            {"label": "RTX 40 Series", "url": "https://www.nvidia.pl/Download/index.aspx"},
-                            {"label": "RTX 50 Series", "url": "https://www.nvidia.pl/Download/index.aspx"}
-                        ]
-                    },
-                    {
-                        "section": "Skrypty",
-                        "name": "Debloat Windows",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/6124/6124451.png",
-                        "variants": [
-                            {"label": "Uruchom Skrypt Win11", "url": "https://github.com/ChrisTitusTech/winutil"}
-                        ]
-                    },
-                    {
-                        "section": "Test",
-                        "name": "HWiNFO",
-                        "iconUrl": "https://cdn-icons-png.flaticon.com/512/2865/2865790.png",
-                        "variants": [
-                            {"label": "HWiNFO Portable", "url": "https://www.hwinfo.com/download/"}
+                        "apps": [
+                            {
+                                "name": "Chrome",
+                                "iconUrl": "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+                                "variants": [
+                                    {"label": "Chrome PL", "url": "https://google.pl"},
+                                    {"label": "Chrome EN", "url": "https://google.com"}
+                                ]
+                            }
                         ]
                     }
                 ];
-                renderUI();
             }
+            renderWorkspace();
         }
 
-        // Funkcja renderująca elementy na ekranie
-        function renderUI() {
-            const wrapper = document.getElementById('sections-wrapper');
-            const datalist = document.getElementById('sections-list');
-            const manageList = document.getElementById('manage-list');
-            
-            wrapper.innerHTML = '';
-            manageList.innerHTML = '';
-            
-            // Grupowanie danych według sekcji
-            const sections = {};
-            appConfig.forEach(app => {
-                if (!sections[app.section]) sections[app.section] = [];
-                sections[app.section].push(app);
-            });
+        function renderWorkspace() {
+            workspace.innerHTML = '';
 
-            // Aktualizacja podpowiedzi sekcji w edytorze
-            datalist.innerHTML = Object.keys(sections).map(s => `<option value="${s}">`).join('');
+            configData.forEach((sec, secIdx) => {
+                const secEl = document.createElement('div');
+                secEl.className = 'section-container';
 
-            // Renderowanie bloków sekcji
-            for (const sectionName in sections) {
-                const secBox = document.createElement('div');
-                secBox.className = 'section-box';
-                
-                secBox.innerHTML = `<div class="section-title">${sectionName}</div>`;
-                
-                const grid = document.createElement('div');
-                grid.className = 'apps-grid';
-                
-                sections[sectionName].forEach((app, index) => {
+                secEl.innerHTML = `
+                    <div class="section-header">
+                        <span class="section-title">${sec.section}</span>
+                        <button class="btn-delete-section" onclick="deleteSection(${secIdx})">Usuń sekcję</button>
+                    </div>
+                    <div class="grid-apps" id="grid-sec-${secIdx}"></div>
+                `;
+                workspace.appendChild(secEl);
+
+                const grid = document.getElementById(`grid-sec-${secIdx}`);
+
+                sec.apps.forEach((app, appIdx) => {
                     const card = document.createElement('div');
                     card.className = 'app-card';
                     
-                    // Renderowanie opcji w rozwijanej liście dla danego kafelka
-                    let selectHTML = '';
-                    if (app.variants && app.variants.length > 0) {
-                        selectHTML = `<select class="app-select" id="sel-${app.name.replace(/\s+/g, '')}">`;
-                        app.variants.forEach(v => {
-                            selectHTML += `<option value="${v.url}">${v.label}</option>`;
-                        });
-                        selectHTML += `</select>`;
-                    }
+                    card.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        currentTargetApp = { secIdx, appIdx };
+                        contextMenu.style.top = `${e.pageY}px`;
+                        contextMenu.style.left = `${e.pageX}px`;
+                        contextMenu.style.display = 'block';
+                    });
+
+                    let optionsHtml = app.variants.map((v, vIdx) => `<option value="${v.url}">${v.label}</option>`).join('');
+                    optionsHtml += `<option value="__ADD_NEW__">+ Dodaj wersję</option>`;
 
                     card.innerHTML = `
                         <div class="app-icon">
-                            <img src="${app.iconUrl}" alt="icon" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135682.png'">
+                            <img src="${app.iconUrl}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135682.png'">
                         </div>
                         <div class="app-info">
                             <div class="app-name" title="${app.name}">${app.name}</div>
-                            ${selectHTML}
+                            <div class="app-select-container">
+                                <select class="app-select" onchange="handleSelectChange(this, ${secIdx}, ${appIdx})">
+                                    ${optionsHtml}
+                                </select>
+                                <button class="btn-download" onclick="downloadApp(this)">💾</button>
+                            </div>
                         </div>
-                        <button class="download-btn" onclick="triggerDownload('${app.name.replace(/\s+/g, '')}')">💾</button>
                     `;
                     grid.appendChild(card);
-
-                    // Jednocześnie dodajemy do listy usuwania po prawej stronie
-                    const mItem = document.createElement('div');
-                    mItem.className = 'manage-item';
-                    mItem.innerHTML = `
-                        <span>[${app.section}] <b>${app.name}</b></span>
-                        <button onclick="deleteAppItem('${app.name}')">Usuń</button>
-                    `;
-                    manageList.appendChild(mItem);
                 });
-                
-                secBox.appendChild(grid);
-                wrapper.appendChild(secBox);
-            }
-        }
 
-        // Obsługa pobierania po kliknięciu ikony zapisu na kafelku
-        function triggerDownload(elementId) {
-            const selectEl = document.getElementById(`sel-${elementId}`);
-            if (selectEl) {
-                window.open(selectEl.value, '_blank');
-            }
-        }
-
-        // Funkcja dodawania nowego kafelka z poziomu formularza modyfikatora
-        function addAppItem() {
-            const section = document.getElementById('inp-section').value.trim();
-            const name = document.getElementById('inp-name').value.trim();
-            const iconUrl = document.getElementById('inp-icon').value.trim();
-
-            if (!section || !name) {
-                alert('Sekcja oraz nazwa aplikacji są wymagane!');
-                return;
-            }
-
-            const variants = [];
-            for (let i = 1; i <= 3; i++) {
-                const vName = document.getElementById(`inp-v${i}-name`).value.trim();
-                const vUrl = document.getElementById(`inp-v${i}-url`).value.trim();
-                if (vName && vUrl) {
-                    variants.push({ "label": vName, "url": vUrl });
-                }
-            }
-
-            // Jeśli użytkownik nie dodał żadnego wariantu, utwórz domyślny z samą nazwą aplikacji
-            if (variants.length === 0) {
-                variants.push({ "label": "Pobierz", "url": "#" });
-            }
-
-            // Usunięcie jeśli już istnieje duplikat o tej samej nazwie w celu nadpisania
-            appConfig = appConfig.filter(item => item.name.toLowerCase() !== name.toLowerCase());
-
-            appConfig.push({
-                section,
-                name,
-                iconUrl: iconUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135682.png',
-                variants
+                const addAppCard = document.createElement('div');
+                addAppCard.className = 'app-card card-add';
+                addAppCard.innerText = '+ Dodaj program';
+                addAppCard.onclick = () => addApp(secIdx);
+                grid.appendChild(addAppCard);
             });
 
-            // Reset formularza oprócz sekcji (wygoda dodawania seryjnego)
-            document.getElementById('inp-name').value = '';
-            document.getElementById('inp-icon').value = '';
-            for (let i = 1; i <= 3; i++) {
-                document.getElementById(`inp-v${i}-name`).value = '';
-                document.getElementById(`inp-v${i}-url`).value = '';
+            const addSecBtn = document.createElement('button');
+            addSecBtn.className = 'btn-add-section';
+            addSecBtn.innerText = '+ Dodaj nową sekcję';
+            addSecBtn.onclick = addSection;
+            workspace.appendChild(addSecBtn);
+        }
+
+        function handleSelectChange(selectEl, secIdx, appIdx) {
+            if (selectEl.value === '__ADD_NEW__') {
+                const label = prompt("Wpisz nazwę wariantu (np. NVIDIA RTX 50 Series lub Chrome NL):");
+                if (!label) { selectEl.selectedIndex = 0; return; }
+                const url = prompt("Podaj adres URL lub ścieżkę lokalną pliku:");
+                if (!url) { selectEl.selectedIndex = 0; return; }
+
+                configData[secIdx].apps[appIdx].variants.push({ label, url });
+                renderWorkspace();
             }
-
-            renderUI();
         }
 
-        // Usuwanie kafelka z konfiguracji
-        function deleteAppItem(name) {
-            appConfig = appConfig.filter(item => item.name !== name);
-            renderUI();
+        document.addEventListener('contextmenu', function(e) {
+            if (!e.target.closest('.app-card')) {
+                contextMenu.style.display = 'none';
+            }
+        });
+
+        function downloadApp(btnEl) {
+            const select = btnEl.previousElementSibling;
+            if(select.value && select.value !== '__ADD_NEW__') {
+                window.open(select.value, '_blank');
+            }
         }
 
-        // Eksportowanie bieżącej konfiguracji do nowego pliku config.json
-        function exportJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appConfig, null, 2));
+        function addSection() {
+            const name = prompt("Podaj nazwę nowej sekcji:");
+            if (name) {
+                configData.push({ section: name, apps: [] });
+                renderWorkspace();
+            }
+        }
+
+        function deleteSection(secIdx) {
+            if (confirm("Czy na pewno chcesz usunąć tę sekcję wraz ze wszystkimi programami?")) {
+                configData.splice(secIdx, 1);
+                renderWorkspace();
+            }
+        }
+
+        function addApp(secIdx) {
+            const name = prompt("Nazwa programu:");
+            if (!name) return;
+            const iconUrl = prompt("Link do ikony (lub lokalna ścieżka np. ./img/icon.png):") || "";
+            const vLabel = prompt("Nazwa pierwszej wersji (np. Wersja PL lub Standard):") || "Domyślna";
+            const vUrl = prompt("Link/ścieżka do pobrania pliku:") || "#";
+
+            configData[secIdx].apps.push({
+                name,
+                iconUrl,
+                variants: [{ label: vLabel, url: vUrl }]
+            });
+            renderWorkspace();
+        }
+
+        function contextEditApp() {
+            if (!currentTargetApp) return;
+            const app = configData[currentTargetApp.secIdx].apps[currentTargetApp.appIdx];
+            
+            const newName = prompt("Zmień nazwę programu:", app.name);
+            if (newName) app.name = newName;
+            
+            const newIcon = prompt("Zmień link do ikony:", app.iconUrl);
+            if (newIcon !== null) app.iconUrl = newIcon;
+
+            renderWorkspace();
+        }
+
+        function contextDeleteApp() {
+            if (!currentTargetApp) return;
+            if (confirm("Usunąć ten program?")) {
+                configData[currentTargetApp.secIdx].apps.splice(currentTargetApp.appIdx, 1);
+                renderWorkspace();
+            }
+        }
+
+        window.addEventListener('click', () => { contextMenu.style.display = 'none'; });
+
+        function exportConfig() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(configData, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
             downloadAnchor.setAttribute("download", "config.json");
@@ -553,7 +411,7 @@
             downloadAnchor.remove();
         }
 
-        window.addEventListener('DOMContentLoaded', fetchConfig);
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
