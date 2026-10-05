@@ -27,7 +27,7 @@
           {
             "label": "Opera PL",
             "url": "https://www.opera.com/pl/computer/thanks?ni=eapgx&os=windows"
-          },
+          }
         ]
       }
     ]
@@ -48,8 +48,7 @@
             "url": "./drivers/rst_11_12.exe"
           }
         ]
-      },
-
+      }
     ]
   }
 ]
