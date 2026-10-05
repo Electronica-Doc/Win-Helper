@@ -36,7 +36,7 @@
         "variants": [
           {
             "label": "AIO",
-            "url": "programy/vlc-3.0.24-win64.exe"
+            "url": "https://get.videolan.org/vlc/3.0.24/win32/vlc-3.0.24-win32.exe"
           }
         ]
       }
