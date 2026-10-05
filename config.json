@@ -22,7 +22,7 @@
       },
       {
         "name": "Opera GX",
-        "iconUrl": "ICON.opera.png",
+        "iconUrl": "ICON/opera.png",
         "variants": [
           {
             "label": "Opera PL",
