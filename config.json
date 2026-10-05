@@ -39,6 +39,26 @@
             "url": "https://get.videolan.org/vlc/3.0.24/win32/vlc-3.0.24-win32.exe"
           }
         ]
+      },
+      {
+        "name": "Winrar",
+        "iconUrl": "ICON/winrar.png",
+        "variants": [
+          {
+            "label": "Default",
+            "url": "https://www.win-rar.com/postdownload.html?&L=12"
+          }
+        ]
+      },
+      {
+        "name": "7z",
+        "iconUrl": "ICON/7z.png",
+        "variants": [
+          {
+            "label": "Default",
+            "url": "https://github.com/ip7z/7zip/releases/download/26.03/7z2603-x64.exe"
+          }
+        ]
       }
     ]
   },
