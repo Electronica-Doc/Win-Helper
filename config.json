@@ -21,21 +21,13 @@
         ]
       },
       {
-        "name": "Opera",
-        "iconUrl": "https://cdn-icons-png.flaticon.com/512/732/732235.png",
+        "name": "Opera GX",
+        "iconUrl": "ICON.opera.png",
         "variants": [
           {
             "label": "Opera PL",
-            "url": "https://www.opera.com/pl"
+            "url": "https://www.opera.com/pl/computer/thanks?ni=eapgx&os=windows"
           },
-          {
-            "label": "Opera NL",
-            "url": "https://www.opera.com/nl"
-          },
-          {
-            "label": "Opera EN",
-            "url": "https://www.opera.com/en"
-          }
         ]
       }
     ]
@@ -57,24 +49,7 @@
           }
         ]
       },
-      {
-        "name": "NVIDIA GeForce",
-        "iconUrl": "https://cdn-icons-png.flaticon.com/512/10103/10103819.png",
-        "variants": [
-          {
-            "label": "RTX 30 Series",
-            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
-          },
-          {
-            "label": "RTX 40 Series",
-            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
-          },
-          {
-            "label": "RTX 50 Series",
-            "url": "https://www.nvidia.com/pl-pl/geforce/drivers/"
-          }
-        ]
-      }
+
     ]
   }
 ]
