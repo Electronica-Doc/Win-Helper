@@ -29,6 +29,16 @@
             "url": "https://www.opera.com/pl/computer/thanks?ni=eapgx&os=windows"
           }
         ]
+      },
+      {
+        "name": "Vlc",
+        "iconUrl": "ICON/vlc.png",
+        "variants": [
+          {
+            "label": "AIO",
+            "url": "programy/vlc-3.0.24-win64.exe"
+          }
+        ]
       }
     ]
   },
